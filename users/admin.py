@@ -9,8 +9,12 @@ class UserAdmin(admin.ModelAdmin):
 
     def make_active(self, request, queryset):
         queryset.update(is_active=True)
-    make_active.short_description = "Зберегти як активні"
+    make_active.short_description = "Дозволити участь у грі"
 
-    actions = [make_active]
+    def make_inactive(self, request, queryset):
+        queryset.update(is_active=True)
+    make_inactive.short_description = "Заборонити участь у грі"
+
+    actions = [make_active, make_inactive, ]
 
 admin.site.register(User, UserAdmin)
