@@ -22,8 +22,13 @@ $(document).ready(function(){
             type: "POST",
             url: "/",
             data: data,
-            success: function(msg){
-                alert( "Прибыли данные: " + msg );
+            success: function(result){
+                if(result['status'] == 0) {
+                    $("input[name='" + result['error_value'] + "']").focus().slideError();
+                } else {
+                    $(".js-signForm").html(result['data']);
+                }
+
             }
         });
 

@@ -1,13 +1,13 @@
+# coding=utf-8
 from django import http
+from django.http import JsonResponse
 from django.views import generic
 from users.models import User
 from users.utils import FACULTIES_TYPES, COURSE_TYPES
 
 
-class IndexView(generic.CreateView):
+class IndexView(generic.TemplateView):
     template_name = "users/index.html"
-    model = User
-    fields = ['name']
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
@@ -17,6 +17,24 @@ class IndexView(generic.CreateView):
 
         return context
 
-    def post(self, request, **kwargs):
-        # request.POST
-        return http.HttpResponse("Post")
+    def post(self, request):
+        result = {}
+        for data in request.POST:
+            if request.POST[data] == "":
+                result['status'] = 0
+                result['error_value'] = data
+                print(result)
+                return JsonResponse(result)
+
+        print(request.POST)
+
+        user = User(name=request.POST['name'], vk_link=request.POST['vk_link'], faculty=request.POST['faculty'],
+                    course=request.POST['course'], group_num=request.POST['group_num'],
+                    mobile_num=request.POST['mobile_num'], )
+        user.save()
+
+        result['status'] = 1
+        result['data'] = "<h5>Спасибо, заявка успешно отправлена.</h5>" \
+                         "<p class='small'>Перед началом игры Вам придёт SMS.</p>"
+
+        return JsonResponse(result)

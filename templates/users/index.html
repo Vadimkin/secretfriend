@@ -44,7 +44,7 @@
             <div class="col-sm-7">
                 <select name="faculty" class="form-control">
                   {% for one_faculty in faculties %}
-                     <option id="{{ one_faculty.0 }}">{{one_faculty.1}}</option>
+                     <option value="{{ one_faculty.0 }}">{{one_faculty.1}}</option>
                   {% endfor %}
                 </select>
             </div>
@@ -71,7 +71,7 @@
           <div class="form-group">
             <label for="inputPhone" class="col-sm-5 control-label">Ваш мобильный номер</label>
             <div class="col-sm-7">
-              <input type="text" class="form-control" name="mobile" id="inputPhone">
+              <input type="text" class="form-control" name="mobile_num" id="inputPhone">
             </div>
           </div>
 
