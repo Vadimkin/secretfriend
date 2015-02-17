@@ -1,0 +1,101 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Тайный друг ЗНУ</title>
+
+		<!-- Bootstrap -->
+		<link href="{% static "users/css/bootstrap.min.css" %}" rel="stylesheet">
+		<link href="{% static "users/css/user.css" %}" rel="stylesheet">
+
+		<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+
+	<div class="hero" id="content">
+		<div class="container">
+			<h1>Тайный друг ЗНУ</h1>
+			<p>Игра для тех, кто готов отвлечься от серых будней учебы и<br>сделать небольшие приятности</p>
+		</div>
+	</div>
+
+	<div class="container">
+		{% block content %}
+		<div class="page-header">
+			<h1>Правила?</h1>
+		</div>
+		<!-- <h3>Какие правила?</h3> -->
+		<p>1. 14 декабря вы получаете информацию о каком-то человеке, который записался для учавствия в игре.</p>
+		<p>2. В течение НЕДЕЛИ (не потом, не раньше, не когда-то) а именно с 15 декабря по 20 нужно делать подарки или разные приятности для того человека, который вам попался</p>
+		<p>3. Что может быть подарком — это только ваша фантазия. Но помните, что вы тоже получите подарок. Возможно, от такого же щедрого человека, как вы сами.</p>
+		<p>4. Главное правило - НЕ СПАЛИТЬСЯ! В этом и вся интрига</p>
+		<p>5. Карты открываются 23 ноября в 19.00 в обсуждении "Кто же это был?"</p>
+		<p>6. Второе и САМОЕ ВАЖНОЕ правило. Не ждите, пока вас обрадуют. Делайте, дарите, пишите первыми. Ведь это так круто, быть первым.</p>
+		<p>7. Не останавливайтесь на одном подарке. У вас целых 7 дней, чтобы удивить своего ТД. Пусть он по вечерам мучается вопросами, кто же делает эти милости :-)</p>
+
+		<div class="page-header">
+			<h1>Запись участников!</h1>
+		</div>
+
+		<div class="row">
+			<div class="col-md-6">
+				<form class="form-horizontal js-signForm" role="form">
+				  <div class="form-group">
+				    <label for="inputEmail3" class="col-sm-5 control-label">Фамилия и имя</label>
+				    <div class="col-sm-7">
+				      <input type="email" class="form-control" id="inputEmail3" placeholder="">
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="inputProfile" class="col-sm-5 control-label">Ссылка на профиль</label>
+				    <div class="col-sm-7">
+				      <input type="text" class="form-control" id="inputProfile" placeholder="ВКонтакте">
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="inputGroup" class="col-sm-5 control-label">Курс, специальность</label>
+				    <div class="col-sm-7">
+				      <input type="text" class="form-control" id="inputGroup" placeholder="Информация, чтобы вас найти">
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="inputPhone" class="col-sm-5 control-label">Ваш мобильный номер</label>
+				    <div class="col-sm-7">
+				      <input type="text" class="form-control" id="inputPhone" placeholder="">
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <div class="col-sm-offset-5 col-sm-7">
+				      <div class="checkbox">
+				        <label>
+				          <input type="checkbox" class="agreeRules"> Я хочу отправить подарок незнакомцу и согласен с правилами
+				        </label>
+				      </div>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <div class="col-sm-offset-5 col-sm-7">
+				      <button type="submit" class="btn btn-default btn-sendData" disabled="disabled">Отправить</button>
+				    </div>
+				  </div>
+				</form>
+			</div>
+			<div class="col-md-5 col-md-offset-1">
+				<h5>Зачем вводить свой мобильный номер?</h5>
+				<p class="small">Этот номер никто не будет знать, но на него ХХ декабря придёт сообщение о том, кому вам нужно отправить подарок и  обрадовать :-)</p>
+			</div>
+			{% endblock %}
+		</div>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="{% static "users/js/bootstrap.min.js" %}"></script>
+	<script src="{% static "users/js/main.js" %}"></script>
+  </body>
+</html>
