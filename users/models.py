@@ -11,6 +11,7 @@ class User(models.Model):
     group_num = models.CharField(max_length=200, verbose_name="Номер групи")
     mobile_num = models.CharField(max_length=200, verbose_name="Номер мобільного")
     is_active = models.BooleanField(default=0, verbose_name="Чи дозволена участь у грі")
+    friend = models.ForeignKey('self', related_name='user_id', editable=True, null=True, blank=True)
 
     class Meta:
         verbose_name = "Участник"
