@@ -1,5 +1,5 @@
 # coding=utf-8
-from django.db import models
+from django.db import models, connection
 from users.utils import FACULTIES_TYPES, COURSE_TYPES
 
 

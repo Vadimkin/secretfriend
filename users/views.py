@@ -28,7 +28,7 @@ class IndexView(generic.TemplateView):
 
         user = User(name=request.POST['name'], vk_link=request.POST['vk_link'], faculty=request.POST['faculty'],
                     course=request.POST['course'], group_num=request.POST['group_num'],
-                    mobile_num=re.sub("[^0-9]", "", request.POST['mobile_num']) )
+                    mobile_num="+38" + re.sub("[^0-9]", "", request.POST['mobile_num']) )
         user.save()
 
         result['status'] = 1
