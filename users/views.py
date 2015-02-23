@@ -1,5 +1,5 @@
 # coding=utf-8
-from django import http
+import re
 from django.http import JsonResponse
 from django.views import generic
 from users.models import User
@@ -26,11 +26,9 @@ class IndexView(generic.TemplateView):
                 print(result)
                 return JsonResponse(result)
 
-        print(request.POST)
-
         user = User(name=request.POST['name'], vk_link=request.POST['vk_link'], faculty=request.POST['faculty'],
                     course=request.POST['course'], group_num=request.POST['group_num'],
-                    mobile_num=request.POST['mobile_num'], )
+                    mobile_num=re.sub("[^0-9]", "", request.POST['mobile_num']) )
         user.save()
 
         result['status'] = 1

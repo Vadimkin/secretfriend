@@ -12,9 +12,13 @@ class UserAdmin(admin.ModelAdmin):
     make_active.short_description = "Дозволити участь у грі"
 
     def make_inactive(self, request, queryset):
-        queryset.update(is_active=True)
+        queryset.update(is_active=False)
     make_inactive.short_description = "Заборонити участь у грі"
 
-    actions = [make_active, make_inactive, ]
+    def remove_friend(self, request, queryset):
+        queryset.update(friend=None)
+    remove_friend.short_description = "Видалити друга"
+
+    actions = [make_active, make_inactive]
 
 admin.site.register(User, UserAdmin)

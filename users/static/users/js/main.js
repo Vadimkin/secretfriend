@@ -11,6 +11,7 @@ $(document).ready(function(){
 
 	$('.js-signForm').on('submit', function() {
 		data = $(this).serialize();
+		$("#inputPhone").inputmask('remove');
 //		$('.js-signForm input[type="text"]').each(function() {
 //		    if($(this).val() == "") {
 //		        $(this).focus().slideError();
