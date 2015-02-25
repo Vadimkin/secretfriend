@@ -3,11 +3,14 @@ import re
 from django.http import JsonResponse
 from django.views import generic
 from users.models import User
-from users.utils import FACULTIES_TYPES, COURSE_TYPES
+from users.utils import FACULTIES_TYPES, COURSE_TYPES, site_mode
 
 
 class IndexView(generic.TemplateView):
-    template_name = "users/index.html"
+    if site_mode() == 0:
+        template_name = "users/index.html"
+    elif site_mode() == 1:
+        template_name = "users/game.html"
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
@@ -28,7 +31,7 @@ class IndexView(generic.TemplateView):
 
         user = User(name=request.POST['name'], vk_link=request.POST['vk_link'], faculty=request.POST['faculty'],
                     course=request.POST['course'], group_num=request.POST['group_num'],
-                    mobile_num="+38" + re.sub("[^0-9]", "", request.POST['mobile_num']) )
+                    mobile_num="+38" + re.sub("[^0-9]", "", request.POST['mobile_num']))
         user.save()
 
         result['status'] = 1

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <form class="form-horizontal js-getCode" style="margin-top: 100px;" role="form">
+          {% csrf_token %}
+          <div class="form-group">
+              <input type="text" class="form-control" id="name" name="name" placeholder="Введите код">
+          </div>
+
+          <div class="form-group" style="text-align:center;">
+              <button type="submit" class="btn btn-lg btn-default btn-getCode">Отправить</button>
+          </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

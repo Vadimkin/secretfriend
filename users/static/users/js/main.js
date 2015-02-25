@@ -12,12 +12,12 @@ $(document).ready(function(){
 	$('.js-signForm').on('submit', function() {
 		data = $(this).serialize();
 		$("#inputPhone").inputmask('remove');
-//		$('.js-signForm input[type="text"]').each(function() {
-//		    if($(this).val() == "") {
-//		        $(this).focus().slideError();
-//		        return false;
-//		    }
-//		})
+		$('.js-signForm input[type="text"]').each(function() {
+		    if($(this).val() == "") {
+		        $(this).focus().slideError();
+		        return false;
+		    }
+		})
 
         $.ajax({
             type: "POST",
@@ -34,6 +34,11 @@ $(document).ready(function(){
         });
 
 		return false;
+	});
+
+	$(".js-getCode").on('submit', function(){
+	    alert("hello");
+	    return false;
 	});
 
 });
