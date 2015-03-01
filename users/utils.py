@@ -32,7 +32,7 @@ def site_mode():
     GAME_MODE = 1
     RESULTS_MODE = 2
 
-    if datetime.date.today() <= datetime.date(2015, 2, 15):
+    if datetime.date.today() <= datetime.date(2015, 3, 15):
         return REGISTRATION_MODE
     elif datetime.date.today() < datetime.date(2015, 3, 22):
         return GAME_MODE
