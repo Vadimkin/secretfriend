@@ -37,7 +37,22 @@ $(document).ready(function(){
 	});
 
 	$(".js-getCode").on('submit', function(){
-	    alert("hello");
+	    data = $(this).serialize();
+
+	    $.ajax({
+            type: "POST",
+            url: "/",
+            data: data,
+            success: function(result){
+                if(result['status'] == 0) {
+                    alert(result['error_text'])
+                } else {
+                    $(".js-getCode").html(result['data']);
+                }
+
+            }
+        });
+
 	    return false;
 	});
 

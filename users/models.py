@@ -12,6 +12,10 @@ class User(models.Model):
     mobile_num = models.CharField(max_length=200, verbose_name="Номер мобільного")
     is_active = models.BooleanField(default=0, verbose_name="Чи дозволена участь у грі")
     friend = models.ForeignKey('self', related_name='user_id', editable=True, null=True, blank=True)
+    hash_code = models.CharField(max_length=200, verbose_name="Secret Key", default="")
+
+    def get_faculty(self):
+        return FACULTIES_TYPES[self.faculty][1]
 
     class Meta:
         verbose_name = "Участник"
