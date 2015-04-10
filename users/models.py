@@ -14,6 +14,9 @@ class User(models.Model):
     friend = models.ForeignKey('self', related_name='user_id', editable=True, null=True, blank=True)
     hash_code = models.CharField(max_length=200, verbose_name="Secret Key", default="")
 
+    is_friends_before_start = models.BooleanField(default=False, verbose_name="Були друзями до старту гри")
+    is_friends_after_end = models.BooleanField(default=False, verbose_name="Стали друзями після кінця гри")
+
     def get_faculty(self):
         return FACULTIES_TYPES[self.faculty][1]
 

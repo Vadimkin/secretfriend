@@ -9,9 +9,10 @@ from users.utils import FACULTIES_TYPES, COURSE_TYPES, site_mode
 
 
 class IndexView(generic.TemplateView):
-    if site_mode() == 0:
+    mode = site_mode()
+    if mode == 0:
         template_name = "users/index.html"
-    elif site_mode() == 1:
+    elif mode in [1, 2]:
         template_name = "users/game.html"
 
     def get_context_data(self, **kwargs):
@@ -20,11 +21,37 @@ class IndexView(generic.TemplateView):
         context['faculties'] = FACULTIES_TYPES
         context['courses'] = COURSE_TYPES
 
+        if self.mode == 2:
+            context['mode'] = u"Результаты"
+
         return context
 
     def post(self, request):
         result = {}
-        try:
+
+        if self.mode == 2:
+            try:
+                if request.POST['code']:
+                    user = User.objects.get(hash_code=request.POST['code'])
+                    if user:
+                        secret_friend = User.objects.get(friend=user)
+                        result['data'] = u"Твоим ТД был(а) — {0}<br>" \
+                                         u"Факультет {1}<br>" \
+                                         u"Курс — {2}<br>" \
+                                         u"Номер группы — {3}<br>" \
+                                         u"Профиль VK — <a href=\"//vk.com/id{4}\">id{4}</a>".format(
+                            secret_friend.name, secret_friend.get_faculty(), secret_friend.course, secret_friend.group_num,
+                            secret_friend.vk_link)
+
+                    else:
+                        result['status'] = 0
+                        result['error_text'] = u"Неправильно введён код"
+
+            except ObjectDoesNotExist:
+                result['status'] = 0
+                result['error_text'] = u"Неправильно введён код"
+
+        elif self.mode == 0:
             if request.POST['name']:
                 for data in request.POST:
                     if request.POST[data] == "":
@@ -42,7 +69,7 @@ class IndexView(generic.TemplateView):
                 result['data'] = "<h5>Спасибо, заявка успешно отправлена.</h5>" \
                                  "<p class='small'>Перед началом игры Вам придёт SMS.</p>"
 
-        except MultiValueDictKeyError:
+        elif self.mode == 1:
             try:
                 if request.POST['code']:
                     user = User.objects.get(hash_code=request.POST['code'])

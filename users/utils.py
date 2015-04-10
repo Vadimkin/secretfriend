@@ -1,6 +1,13 @@
 # coding=utf-8
 import datetime
+import json
 import random
+import string
+from time import sleep
+import urllib
+import urllib2
+
+from django.db.models import Q
 
 
 FACULTIES_TYPES = (
@@ -37,8 +44,7 @@ def site_mode():
 
     if datetime.date.today() < datetime.date(2015, 4, 1):
         return REGISTRATION_MODE
-    elif datetime.date.today() < datetime.date(2015, 4, 22):
-        # generate_friends()
+    elif datetime.date.today() < datetime.date(2015, 4, 10):
         return GAME_MODE
     else:
         return RESULTS_MODE
@@ -63,3 +69,52 @@ def generate_friends():
         one_user.save()
 
         users_random.remove(random_id)
+
+
+def update_hash():
+    from users.models import User
+
+    all_active_users = User.objects.filter(is_active=1)
+
+    for one_user in all_active_users:
+        one_user.hash_code = ''.join(random.choice(string.digits) for _ in range(7))
+        one_user.save()
+
+
+def check_is_friends():
+    from users.models import User
+    from secretfriend.settings_local import VK_TOKEN
+
+    all_active_users = User.objects.filter(is_active=1)
+
+    data = {
+        'user_ids': ",".join([user.vk_link for user in all_active_users]),
+        'fields': 'screen_name',
+        'access_token': VK_TOKEN
+    }
+
+    request = urllib2.Request(url="https://api.vk.com/method/users.get?" + urllib.urlencode(data))
+    result = json.loads(urllib2.urlopen(request).read())
+
+    for vk_user in result['response']:
+        try:
+            user = User.objects.filter(
+                Q(vk_link='id' + str(vk_user['uid'])) | Q(vk_link=vk_user[u'screen_name']) | Q(
+                    vk_link=str(vk_user['uid'])))
+        except KeyError:
+            continue
+
+        user.update(vk_link=vk_user['uid'])
+
+    for user in all_active_users:
+        try:
+            request = urllib2.Request(
+                url="https://api.vk.com/method/friends.get?" + urllib.urlencode({'user_id': user.vk_link}))
+            result = json.loads(urllib2.urlopen(request).read())
+
+            if user.friend.vk_link in result['response']:
+                user.update(is_friends_before_start=True)
+        except KeyError:
+            continue
+
+        sleep(0.5)
