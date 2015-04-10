@@ -112,9 +112,12 @@ def check_is_friends():
                 url="https://api.vk.com/method/friends.get?" + urllib.urlencode({'user_id': user.vk_link}))
             result = json.loads(urllib2.urlopen(request).read())
 
-            if user.friend.vk_link in result['response']:
-                user.update(is_friends_before_start=True)
-        except KeyError:
+            if int(user.friend.vk_link) in result['response']:
+                user.is_friends_before_start = True
+                user.save()
+        except (KeyError, ValueError):
             continue
+
+        print(user)
 
         sleep(0.5)
