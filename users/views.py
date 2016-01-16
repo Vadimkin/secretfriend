@@ -8,23 +8,62 @@ from users.models import User
 from users.utils import FACULTIES_TYPES, COURSE_TYPES, site_mode
 
 
-class IndexView(generic.TemplateView):
+class IndexRedirectView(generic.RedirectView):
     mode = site_mode()
+
     if mode == 0:
-        template_name = "users/index.html"
-    elif mode in [1, 2]:
-        template_name = "users/game.html"
+        url = "/register/"
+    else:
+        url = "/profile/"
+
+
+class RegisterTemplateView(generic.TemplateView):
+    template_name = "users/index.html"
 
     def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
+        context = super(RegisterTemplateView, self).get_context_data(**kwargs)
 
         context['faculties'] = FACULTIES_TYPES
         context['courses'] = COURSE_TYPES
 
-        if self.mode == 2:
-            context['mode'] = u"Результаты"
+        return context
+
+    def post(self, request):
+        result = {}
+
+        if request.POST['name']:
+            for data in request.POST:
+                if request.POST[data] == "":
+                    result['status'] = 0
+                    result['error_value'] = data
+                    print(result)
+                    return JsonResponse(result)
+
+            user = User(name=request.POST['name'], vk_link=request.POST['vk_link'], faculty=request.POST['faculty'],
+                        course=request.POST['course'], group_num=request.POST['group_num'],
+                        mobile_num="+38" + re.sub("[^0-9]", "", request.POST['mobile_num']))
+            user.save()
+
+            result['status'] = 1
+            result['data'] = "<h5>Спасибо, заявка успешно отправлена.</h5>" \
+                             "<p class='small'>Перед началом игры Вам придёт SMS.</p>"
+
+
+class ProfileTemplateView(generic.TemplateView):
+    template_name = "users/game.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileTemplateView, self).get_context_data(**kwargs)
+
+        context['faculties'] = FACULTIES_TYPES
+        context['courses'] = COURSE_TYPES
 
         return context
+
+
+class ProfileAjaxView(generic.TemplateView):
+
+    mode = site_mode()
 
     def post(self, request):
         result = {}
@@ -35,13 +74,14 @@ class IndexView(generic.TemplateView):
                     user = User.objects.get(hash_code=request.POST['code'])
                     if user:
                         secret_friend = User.objects.get(friend=user)
-                        result['data'] = u"Твоим ТД был(а) — {0}<br>" \
+                        result['data'] = u"<h3>Твоим ТД был(а) — {0}</h3>" \
                                          u"Факультет {1}<br>" \
                                          u"Курс — {2}<br>" \
                                          u"Номер группы — {3}<br>" \
                                          u"Профиль VK — <a href=\"//vk.com/id{4}\">id{4}</a>".format(
-                            secret_friend.name, secret_friend.get_faculty(), secret_friend.course, secret_friend.group_num,
-                            secret_friend.vk_link)
+                                secret_friend.name, secret_friend.get_faculty(), secret_friend.course,
+                                secret_friend.group_num,
+                                secret_friend.vk_link)
 
                     else:
                         result['status'] = 0
@@ -50,24 +90,6 @@ class IndexView(generic.TemplateView):
             except ObjectDoesNotExist:
                 result['status'] = 0
                 result['error_text'] = u"Неправильно введён код"
-
-        elif self.mode == 0:
-            if request.POST['name']:
-                for data in request.POST:
-                    if request.POST[data] == "":
-                        result['status'] = 0
-                        result['error_value'] = data
-                        print(result)
-                        return JsonResponse(result)
-
-                user = User(name=request.POST['name'], vk_link=request.POST['vk_link'], faculty=request.POST['faculty'],
-                            course=request.POST['course'], group_num=request.POST['group_num'],
-                            mobile_num="+38" + re.sub("[^0-9]", "", request.POST['mobile_num']))
-                user.save()
-
-                result['status'] = 1
-                result['data'] = "<h5>Спасибо, заявка успешно отправлена.</h5>" \
-                                 "<p class='small'>Перед началом игры Вам придёт SMS.</p>"
 
         elif self.mode == 1:
             try:
@@ -75,13 +97,14 @@ class IndexView(generic.TemplateView):
                     user = User.objects.get(hash_code=request.POST['code'])
                     if user:
                         secret_friend = User.objects.get(id=user.friend_id)
-                        result['data'] = u"Твой ТД — {0}<br>" \
+                        result['data'] = u"<h3>Твой ТД — {0}</h3>" \
                                          u"Факультет {1}<br>" \
                                          u"Курс — {2}<br>" \
                                          u"Номер группы — {3}<br>" \
                                          u"Профиль VK — {4}".format(
-                            secret_friend.name, secret_friend.get_faculty(), secret_friend.course, secret_friend.group_num,
-                            secret_friend.vk_link)
+                                secret_friend.name, secret_friend.get_faculty(), secret_friend.course,
+                                secret_friend.group_num,
+                                secret_friend.vk_link)
 
                     else:
                         result['status'] = 0
@@ -90,6 +113,5 @@ class IndexView(generic.TemplateView):
             except ObjectDoesNotExist:
                 result['status'] = 0
                 result['error_text'] = u"Неправильно введён код"
-
 
         return JsonResponse(result)

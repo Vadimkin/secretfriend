@@ -21,7 +21,7 @@ $(document).ready(function(){
 
         $.ajax({
             type: "POST",
-            url: "/",
+            url: "",
             data: data,
             success: function(result){
                 if(result['status'] == 0) {
@@ -41,7 +41,7 @@ $(document).ready(function(){
 
 	    $.ajax({
             type: "POST",
-            url: "/",
+            url: "/profile/ajax",
             data: data,
             success: function(result){
                 if(result['status'] == 0) {

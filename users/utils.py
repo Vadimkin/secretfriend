@@ -9,23 +9,21 @@ import urllib2
 
 from django.db.models import Q
 
-
 FACULTIES_TYPES = (
     (0, u'журналістики'),
     (1, u'біологічний'),
-    (2, None),
-    (3, u'іноземної філології'),
-    (4, u'фізичного виховання'),
-    (5, u'історичний'),
-    (6, u'математичний'),
-    (7, u'юридичний'),
-    (8, u'менеджменту'),
-    (9, u'філологічний'),
-    (10, u'фізичний'),
-    (11, u'соціальної педагогіки та психології'),
-    (12, u'соцiологiї та управлiння'),
-    (13, u'економічний'),
-    (14, u'ЕПК')
+    (2, u'іноземної філології'),
+    (3, u'фізичного виховання'),
+    (4, u'історичний'),
+    (5, u'математичний'),
+    (6, u'юридичний'),
+    (7, u'менеджменту'),
+    (8, u'філологічний'),
+    (9, u'фізичний'),
+    (10, u'соціальної педагогіки та психології'),
+    (11, u'соцiологiї та управлiння'),
+    (12, u'економічний'),
+    (13, u'ЕПК')
 )
 
 COURSE_TYPES = (
@@ -38,16 +36,16 @@ COURSE_TYPES = (
 
 
 def site_mode():
-    REGISTRATION_MODE = 0
-    GAME_MODE = 1
-    RESULTS_MODE = 2
+    registration_mode = 0
+    game_mode = 1
+    results_mode = 2
 
-    if datetime.date.today() < datetime.date(2015, 4, 1):
-        return REGISTRATION_MODE
-    elif datetime.date.today() < datetime.date(2015, 4, 10):
-        return GAME_MODE
+    if datetime.date.today() < datetime.date(2016, 2, 6):  # February, 2
+        return registration_mode
+    elif datetime.date.today() < datetime.date(2016, 2, 14):
+        return game_mode
     else:
-        return RESULTS_MODE
+        return results_mode
 
 
 def generate_friends():
@@ -83,14 +81,12 @@ def update_hash():
 
 def check_is_friends():
     from users.models import User
-    from secretfriend.settings_local import VK_TOKEN
 
     all_active_users = User.objects.filter(is_active=1)
 
     data = {
         'user_ids': ",".join([user.vk_link for user in all_active_users]),
-        'fields': 'screen_name',
-        'access_token': VK_TOKEN
+        'fields': 'screen_name'
     }
 
     request = urllib2.Request(url="https://api.vk.com/method/users.get?" + urllib.urlencode(data))
@@ -99,8 +95,8 @@ def check_is_friends():
     for vk_user in result['response']:
         try:
             user = User.objects.filter(
-                Q(vk_link='id' + str(vk_user['uid'])) | Q(vk_link=vk_user[u'screen_name']) | Q(
-                    vk_link=str(vk_user['uid'])))
+                    Q(vk_link='id' + str(vk_user['uid'])) | Q(vk_link=vk_user[u'screen_name']) | Q(
+                            vk_link=str(vk_user['uid'])))
         except KeyError:
             continue
 
@@ -109,7 +105,7 @@ def check_is_friends():
     for user in all_active_users:
         try:
             request = urllib2.Request(
-                url="https://api.vk.com/method/friends.get?" + urllib.urlencode({'user_id': user.vk_link}))
+                    url="https://api.vk.com/method/friends.get?" + urllib.urlencode({'user_id': user.vk_link}))
             result = json.loads(urllib2.urlopen(request).read())
 
             if int(user.friend.vk_link) in result['response']:
