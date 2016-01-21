@@ -5,7 +5,7 @@ import re
 from django.http import JsonResponse
 from django.views import generic
 from users.models import User
-from users.utils import FACULTIES_TYPES, COURSE_TYPES, site_mode
+from users.utils import FACULTIES_TYPES, COURSE_TYPES, site_mode, UNIVERSITY_TYPES
 
 
 class IndexRedirectView(generic.RedirectView):
@@ -25,13 +25,19 @@ class RegisterTemplateView(generic.TemplateView):
 
         context['faculties'] = FACULTIES_TYPES
         context['courses'] = COURSE_TYPES
+        context['universities'] = UNIVERSITY_TYPES
 
         return context
 
     def post(self, request):
         result = {}
 
-        if request.POST['name']:
+        if len(User.objects.filter(ip=request.META.get('REMOTE_ADDR'))) > 0:
+            result['status'] = 1
+            result['data'] = "<h5>Ошибка</h5>" \
+                             "<p class='small'>На один компьютер не более одной регистрации</p>"
+
+        elif request.POST['name']:
             for data in request.POST:
                 if request.POST[data] == "":
                     result['status'] = 0
@@ -41,12 +47,15 @@ class RegisterTemplateView(generic.TemplateView):
 
             user = User(name=request.POST['name'], vk_link=request.POST['vk_link'], faculty=request.POST['faculty'],
                         course=request.POST['course'], group_num=request.POST['group_num'],
-                        mobile_num="+38" + re.sub("[^0-9]", "", request.POST['mobile_num']))
+                        mobile_num="+38" + re.sub("[^0-9]", "", request.POST['mobile_num']),
+                        university=request.POST['university'], ip=request.META.get('REMOTE_ADDR'))
             user.save()
 
             result['status'] = 1
             result['data'] = "<h5>Спасибо, заявка успешно отправлена.</h5>" \
                              "<p class='small'>Перед началом игры Вам придёт SMS.</p>"
+
+        return JsonResponse(result)
 
 
 class ProfileTemplateView(generic.TemplateView):
@@ -62,7 +71,6 @@ class ProfileTemplateView(generic.TemplateView):
 
 
 class ProfileAjaxView(generic.TemplateView):
-
     mode = site_mode()
 
     def post(self, request):

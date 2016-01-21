@@ -23,7 +23,15 @@ FACULTIES_TYPES = (
     (10, u'соціальної педагогіки та психології'),
     (11, u'соцiологiї та управлiння'),
     (12, u'економічний'),
-    (13, u'ЕПК')
+    (13, u'ЕПК'),
+
+    (14, u'Інститут права ім. Володимира Сташиса'),
+    (15, u'Інститут іноземної філології'),
+    (16, u'Інститут економіки'),
+    (17, u'Інститут управління'),
+    (18, u'Інститут здоров\'я, спорту і туризму'),
+    (19, u'Інститут журналістики і масових комунікацій'),
+    (20, u'Коледж КПУ')
 )
 
 COURSE_TYPES = (
@@ -34,15 +42,20 @@ COURSE_TYPES = (
     (5, 5)
 )
 
+UNIVERSITY_TYPES = (
+    (0, u'ЗНУ'),
+    (1, u'КПУ')
+)
+
 
 def site_mode():
     registration_mode = 0
     game_mode = 1
     results_mode = 2
 
-    if datetime.date.today() < datetime.date(2016, 2, 6):  # February, 2
+    if datetime.date.today() <= datetime.date(2016, 2, 13):  # February, 2
         return registration_mode
-    elif datetime.date.today() < datetime.date(2016, 2, 14):
+    elif datetime.date.today() < datetime.date(2016, 2, 20):
         return game_mode
     else:
         return results_mode
