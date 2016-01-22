@@ -48,7 +48,7 @@ class RegisterTemplateView(generic.TemplateView):
             user = User(name=request.POST['name'], vk_link=request.POST['vk_link'], faculty=request.POST['faculty'],
                         course=request.POST['course'], group_num=request.POST['group_num'],
                         mobile_num="+38" + re.sub("[^0-9]", "", request.POST['mobile_num']),
-                        university=request.POST['university'], ip=request.META.get('REMOTE_ADDR'))
+                        university=request.POST['university'], ip=request.META.get('HTTP_X_REAL_IP'))
             user.save()
 
             result['status'] = 1
