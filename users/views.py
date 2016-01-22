@@ -32,12 +32,12 @@ class RegisterTemplateView(generic.TemplateView):
     def post(self, request):
         result = {}
 
-        if len(User.objects.filter(ip=request.META.get('REMOTE_ADDR'))) > 0:
-            result['status'] = 1
-            result['data'] = "<h5>Ошибка</h5>" \
-                             "<p class='small'>На один компьютер не более одной регистрации</p>"
+        # if len(User.objects.filter(ip=request.META.get('REMOTE_ADDR'))) > 0:
+        #     result['status'] = 1
+        #     result['data'] = "<h5>Ошибка</h5>" \
+        #                      "<p class='small'>На один компьютер не более одной регистрации</p>"
 
-        elif request.POST['name']:
+        if request.POST['name']:
             for data in request.POST:
                 if request.POST[data] == "":
                     result['status'] = 0
@@ -45,14 +45,10 @@ class RegisterTemplateView(generic.TemplateView):
                     print(result)
                     return JsonResponse(result)
 
-            ip = request.META.get('HTTP_CF_CONNECTING_IP')
-            if ip is None:
-                ip = request.META.get('REMOTE_ADDR')
-
             user = User(name=request.POST['name'], vk_link=request.POST['vk_link'], faculty=request.POST['faculty'],
                         course=request.POST['course'], group_num=request.POST['group_num'],
                         mobile_num="+38" + re.sub("[^0-9]", "", request.POST['mobile_num']),
-                        university=request.POST['university'], ip=ip)
+                        university=request.POST['university'])
             user.save()
 
             result['status'] = 1

@@ -17,7 +17,6 @@ class User(models.Model):
     friend = models.ForeignKey('self', related_name='user_id', editable=True, null=True, blank=True)
     hash_code = models.CharField(max_length=200, verbose_name="Secret Key", blank=True)
     university = models.IntegerField(default=0, choices=UNIVERSITY_TYPES, verbose_name="Университет")
-    ip = models.GenericIPAddressField(verbose_name="IP", default='127.0.0.1')
 
     is_friends_before_start = models.BooleanField(default=False, verbose_name="Були друзями до старту гри")
     is_friends_after_end = models.BooleanField(default=False, verbose_name="Стали друзями після кінця гри")
