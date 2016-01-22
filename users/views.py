@@ -45,10 +45,14 @@ class RegisterTemplateView(generic.TemplateView):
                     print(result)
                     return JsonResponse(result)
 
+            user_ip = request.META.get('HTTP_X_REAL_IP')
+            if user_ip is None:
+                user_ip = '127.0.0.1'
+
             user = User(name=request.POST['name'], vk_link=request.POST['vk_link'], faculty=request.POST['faculty'],
                         course=request.POST['course'], group_num=request.POST['group_num'],
                         mobile_num="+38" + re.sub("[^0-9]", "", request.POST['mobile_num']),
-                        university=request.POST['university'], ip=request.META.get('HTTP_X_REAL_IP'))
+                        university=request.POST['university'], ip=user_ip)
             user.save()
 
             result['status'] = 1
