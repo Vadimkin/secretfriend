@@ -53,7 +53,7 @@ def site_mode():
     game_mode = 1
     results_mode = 2
 
-    if datetime.date.today() <= datetime.date(2016, 2, 13):  # February, 2
+    if datetime.date.today() < datetime.date(2016, 2, 13):  # February, 2
         return registration_mode
     elif datetime.date.today() < datetime.date(2016, 2, 20):
         return game_mode

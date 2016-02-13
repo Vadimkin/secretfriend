@@ -11,6 +11,8 @@ from users.utils import FACULTIES_TYPES, COURSE_TYPES, site_mode, UNIVERSITY_TYP
 class IndexRedirectView(generic.RedirectView):
     mode = site_mode()
 
+    print(mode)
+
     if mode == 0:
         url = "/register/"
     else:

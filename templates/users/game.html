@@ -3,8 +3,10 @@
 {% block content %}
 
 <div class="row">
+
     <div class="col-md-6 col-md-offset-3">
         <form class="form-horizontal js-getCode" style="margin-top: 100px;" role="form">
+          <h3 class="text-center">Введите код, который придёт 14-го февраля:</h3><br>
           {% if mode %}<h1>{{ mode }}</h1>{% endif %}
           {% csrf_token %}
           <div class="form-group" style="margin-top: 20px;">
