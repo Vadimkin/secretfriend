@@ -64,7 +64,7 @@ def site_mode():
 def generate_friends():
     from users.models import User
 
-    all_active_users = User.objects.filter(is_active=1)
+    all_active_users = User.objects.filter(is_active=1, university=1)
     users_random = [user.id for user in all_active_users]
 
     for one_user in all_active_users:
@@ -74,7 +74,7 @@ def generate_friends():
             if all_active_users.get(id=random_id).id == one_user.id:
                 random_id = None
 
-        one_user.hash_code = one_user.mobile_num[5:10]
+        # one_user.hash_code = one_user.mobile_num[5:10]
 
         one_user.friend = all_active_users.get(id=random_id)
         one_user.save()

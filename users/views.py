@@ -5,7 +5,7 @@ import re
 from django.http import JsonResponse
 from django.views import generic
 from users.models import User
-from users.utils import FACULTIES_TYPES, COURSE_TYPES, site_mode, UNIVERSITY_TYPES
+from users.utils import FACULTIES_TYPES, COURSE_TYPES, site_mode, UNIVERSITY_TYPES, generate_friends
 
 
 class IndexRedirectView(generic.RedirectView):
@@ -64,6 +64,8 @@ class ProfileTemplateView(generic.TemplateView):
     template_name = "users/game.html"
 
     def get_context_data(self, **kwargs):
+        # generate_friends()
+
         context = super(ProfileTemplateView, self).get_context_data(**kwargs)
 
         context['faculties'] = FACULTIES_TYPES
@@ -105,16 +107,22 @@ class ProfileAjaxView(generic.TemplateView):
             try:
                 if request.POST['code']:
                     user = User.objects.get(hash_code=request.POST['code'])
+
+                    user.is_started = True
+                    user.save()
+
                     if user:
                         secret_friend = User.objects.get(id=user.friend_id)
-                        result['data'] = u"<h3>Твой ТД — {0}</h3>" \
+                        result['data'] = u"<h2>Твой ТД — {0}</h2>" \
                                          u"Факультет {1}<br>" \
                                          u"Курс — {2}<br>" \
                                          u"Номер группы — {3}<br>" \
-                                         u"Профиль VK — {4}".format(
+                                         u"Профиль VK — {4}<br>"\
+                                         u"Университет — {5}<hr>"\
+                                         u"Посмотри также <a href='https://vk.com/topic-112377624_32895838'>виш-лист</a>. Возможно, твой ТД что-то там написал :-)".format(
                                 secret_friend.name, secret_friend.get_faculty(), secret_friend.course,
                                 secret_friend.group_num,
-                                secret_friend.vk_link)
+                                secret_friend.vk_link, secret_friend.get_university())
 
                     else:
                         result['status'] = 0

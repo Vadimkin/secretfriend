@@ -18,8 +18,13 @@ class User(models.Model):
     hash_code = models.CharField(max_length=200, verbose_name="Secret Key", blank=True)
     university = models.IntegerField(default=0, choices=UNIVERSITY_TYPES, verbose_name="Университет")
 
+    is_started = models.BooleanField(default=False, verbose_name="Просмотрел ли страницу в самом начале")
+
     is_friends_before_start = models.BooleanField(default=False, verbose_name="Були друзями до старту гри")
     is_friends_after_end = models.BooleanField(default=False, verbose_name="Стали друзями після кінця гри")
+
+    def get_university(self):
+        return UNIVERSITY_TYPES[self.university][1]
 
     def get_faculty(self):
         return FACULTIES_TYPES[self.faculty][1]

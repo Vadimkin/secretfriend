@@ -6,7 +6,8 @@ from users.models import User
 
 class UserAdmin(admin.ModelAdmin):
     # fields = ['name', 'vk_link', 'faculty', 'course', 'group_num', 'mobile_num']
-    list_display = ['name', 'vk_link', 'faculty', 'course', 'group_num', 'mobile_num', 'is_active', 'friend', 'hash_code']
+    list_display = ['name', 'friend', 'vk_link', 'faculty', 'course', 'group_num', 'mobile_num', 'is_active', 'hash_code']
+    list_filter = ['university']
 
     def make_active(self, request, queryset):
         queryset.update(is_active=True)
